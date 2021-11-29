@@ -19,12 +19,12 @@ namespace TUFactory.Lib
 
         public string GetMachineType() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return machineType;
         }
 
         public double GetVolume() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return volume;
         }
     }
 }

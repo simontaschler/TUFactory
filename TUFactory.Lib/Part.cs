@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
+    //Methode ExecuteNextWorkStep hinzufügen um Fehleranfälligkeit zu senken
     public class Part
     {
         private Machine currentMachine;
@@ -14,7 +15,7 @@ namespace TUFactory.Lib
         private int id;
         private int priority;
         private double quality;
-        private int state;
+        private int state;      //1, 2, 3, 4, 5 => mit enum zu ersetzen
         private List<WorkingStep> workInstructions;
 
         private static int nextID = 1;
@@ -27,49 +28,52 @@ namespace TUFactory.Lib
         }
 
         public void DeleteMachiningStep() 
-        { }
+        {
+            if (workInstructions.Count > 0)
+                workInstructions.RemoveAt(0);
+        }
 
         public string GetNextMachineType() 
         {
-            throw new NotImplementedException();
+            return workInstructions.First().GetMachineType();
         }
 
         public double GetNextMachiningVolume()
         {
-            throw new NotImplementedException();
+            return workInstructions.First().GetVolume();
         }
 
         public int GetNumberOfOpenOperations()
         {
-            throw new NotImplementedException();
+            return workInstructions.Count();
         }
 
         public double GetQuality()  //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return quality;
         }
 
         public void SetCurrentMachine(Machine value) //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            currentMachine = value;
         }
 
         public void SetPartFree()
         {
-            throw new NotImplementedException();
+            currentMachine = null;
         }
 
         public void SetQuality(double value) //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            quality = value;
         }
 
         public void SetState(int value) //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            state = value;
         }
 
-        public override string ToString() => 
-            base.ToString();
+        public override string ToString() =>
+            $"Part {id}: {state}";
     }
 }
