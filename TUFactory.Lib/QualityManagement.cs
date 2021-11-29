@@ -23,7 +23,16 @@ namespace TUFactory.Lib
 
         public void CheckQuality(Part part) 
         {
-            throw new NotImplementedException();
+            if (part.GetQuality() <= allowedQuality) 
+            {
+                badParts.Add(part);
+                part.SetState(5);
+            }
+            else
+            {
+                goodParts.Add(part);
+                part.SetState(4);
+            }
         }
     }
 }

@@ -22,12 +22,12 @@ namespace TUFactory.Lib
 
         public override double GetCalcMachineTime()
         {
-            throw new NotImplementedException();
+            return Math.Ceiling(turnedVolume / metalRemovalRate); 
         }
 
         public override double GetInfluenceOnQuality()
         {
-            throw new NotImplementedException();
+            return wear / 45;
         }
 
         public override void SetMachinedVolume()

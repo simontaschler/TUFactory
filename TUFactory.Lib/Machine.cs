@@ -10,7 +10,7 @@ namespace TUFactory.Lib
     {
         private double startTimeInUse;  //time sonst als int?
         private double endTimeInUse;  //time sonst als int?
-        private int errorProbability;
+        private int errorProbability = 5;
         private bool inRepair;
         private bool inUse;
         private int id;
@@ -28,6 +28,9 @@ namespace TUFactory.Lib
             this.errorProbability = errorProbability;
             this.xCoordinate = xCoordinate;
             this.yCoordinate = yCoordinate;
+
+            //Testszenario
+            //errorProbability = 0;
         }
 
         public abstract double GetCalcMachineTime(); //Name zu ändern, kein GetCalc
@@ -35,70 +38,72 @@ namespace TUFactory.Lib
 
         public void AddToEndTime(int endTime) 
         {
-            throw new NotImplementedException();
+            endTimeInUse += endTime;
         }
 
         public Part GetCurrentPart() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return currentPart;
         }
 
         public double GetEndTime() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return endTimeInUse;
         }
 
         public virtual double GetInfluenceOnQuality()
         {
-            throw new NotImplementedException();
+            return 0;
         }
 
         public bool GetInRepair() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return inRepair;
         }
 
         public bool GetInUse() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return inUse;
         }
 
         public string GetMachineType() //durch Property zu ersetzen
         {
-            throw new NotImplementedException();
+            return type;
         }
 
-        public bool PossibleError() //Property? oder Name ändern
+        public bool HasErrorOccured() //PossibleError()
         {
-            throw new NotImplementedException();
+            return new Random().Next(0, 99) <= errorProbability || wear >= .75;
         }
 
         public void Repair()
         {
-            throw new NotImplementedException();
+            wear = 0;
         }
 
         public void SetCurrentPart(Part value) //durch Property ersetzen
         {
-            throw new NotImplementedException();
+            currentPart = value;
         }
 
         public void SetInRepair(bool value) //durch Property ersetzen, mehr Sinn als private das von Repair aufgerufen wird
         {
-            throw new NotImplementedException();
+            inRepair = value;
         }
 
         public void SetInUse(bool value) //durch Property ersetzen, evtl. auch als private
         {
-            throw new NotImplementedException();
+            inUse = value;
         }
 
         public void SetTimesAndCalcWear(double currentTime, double endTime) //Zeit int & double gemischt
         {
-            throw new NotImplementedException();
+            startTimeInUse = currentTime;
+            endTimeInUse = endTime;
+            wear += (endTime - currentTime) / 20;
         }
 
-        public override string ToString() => 
-            base.ToString();
+        public override string ToString() =>
+            $"{GetMachineType()} {id}"; //Methode statt Feld für Umstellung auf Properties
     }
 }
