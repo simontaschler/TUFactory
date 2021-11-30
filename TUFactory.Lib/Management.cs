@@ -58,13 +58,54 @@ namespace TUFactory.Lib
 
         public void SimulatePossibleError(int currentTime)
         {
-            throw new NotImplementedException();
+            var newlyBrokenMachines = new List<Machine>();
+            foreach (var machine in workingMachines) 
+            {
+                if (machine.HasErrorOccured())
+                {
+                    newlyBrokenMachines.Add(machine);
+                    Console.WriteLine($"Fehler bei {machine} aufgetreten");
+                }
+            }
+            brokenMachines.AddRange(newlyBrokenMachines);
+
+            foreach (var brokenMachine in brokenMachines) 
+            { 
+                if (!brokenMachine.GetInRepair()) 
+                {
+                    brokenMachine.SetInRepair(true);
+                    brokenMachine.AddToEndTime(3);
+                    Console.WriteLine($"Reparatur von {brokenMachine} beginnt");
+                }
+            }
+
+            foreach (var newlyBrokenMachine in newlyBrokenMachines) 
+                workingMachines.Remove(newlyBrokenMachine);
+
+            newlyBrokenMachines = null; //um schneller von Garbage-Collection freigegeben zu werden
+
+            var newlyRepairedMachines = new List<Machine>();
+            foreach (var brokenMachine in brokenMachines)
+            {
+                if (currentTime >= brokenMachine.GetEndTime()) 
+                {
+                    brokenMachine.SetInUse(false);
+                    brokenMachine.SetInRepair(false);
+                    newlyRepairedMachines.Add(brokenMachine);
+                    brokenMachine.Repair();
+                    Console.WriteLine($"{brokenMachine} wurde repariert und ist wieder frei");
+                }
+            }
+            workingMachines.AddRange(newlyRepairedMachines);
+
+            foreach (var newlyRepairedMachine in newlyRepairedMachines)
+                brokenMachines.Remove(newlyRepairedMachine);
         }
 
         public void WriteAllQualities() //evtl. Name ändern
         {
             foreach (var part in allParts)
-                Console.WriteLine($"{part}, Quality: {part.GetQuality()}");
+                Console.WriteLine($"{part} Qualität: {part.GetQuality()}");
         }
 
         public void WriteStates() //GetStates()

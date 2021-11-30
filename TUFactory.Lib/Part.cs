@@ -74,6 +74,6 @@ namespace TUFactory.Lib
         }
 
         public override string ToString() =>
-            $"Part {id}: {state}";
+            $"Part {id} state: {state}";
     }
 }
