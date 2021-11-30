@@ -9,15 +9,17 @@ namespace TUFactory.Lib
     public class MillingMachine : Machine
     {
         private double cuttingDepth;
-        private double cuttingSpeed;
+        private double cuttingWidth;
         private double feedingSpeed;
         private double millingVolume;
 
-        public MillingMachine(int id, int errorProbability, double cuttingSpeed, double cuttingDepth, double feedingSpeed, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
+        public MillingMachine(int id, int errorProbability, double cuttingWidth, double cuttingDepth, double feedingSpeed, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
         {
-            this.cuttingSpeed = cuttingSpeed;
+            this.cuttingWidth = cuttingWidth;
             this.cuttingDepth = cuttingDepth;
             this.feedingSpeed = feedingSpeed;
+            metalRemovalRate = cuttingDepth * cuttingWidth * feedingSpeed;
+            type = "Fräsmaschine";
         }
 
         public override double GetCalcMachineTime()

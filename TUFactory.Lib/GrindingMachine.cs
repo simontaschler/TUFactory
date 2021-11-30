@@ -14,12 +14,14 @@ namespace TUFactory.Lib
         private double infeed;
         private double speedRelation;
 
-        public GrindingMachine(int id, int errorProbability, double infeed,/* double grindingWidth,*/ double cuttingSpeed, double speedRelation, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
+        public GrindingMachine(int id, int errorProbability, double infeed, double grindingWidth, double cuttingSpeed, double speedRelation, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
         {
             this.infeed = infeed;
-            grindingWidth = 50; //laut Angabe konst. = 50 mm
+            this.grindingWidth = grindingWidth;
             this.cuttingSpeed = cuttingSpeed;
             this.speedRelation = speedRelation;
+            metalRemovalRate = infeed * grindingWidth * cuttingSpeed / speedRelation;
+            type = "Schleifmaschine";
         }
 
         public override double GetCalcMachineTime()

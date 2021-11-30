@@ -18,6 +18,8 @@ namespace TUFactory.Lib
             this.cuttingSpeed = cuttingSpeed;
             this.cuttingDepth = cuttingDepth;
             this.feed = feed;
+            metalRemovalRate = cuttingSpeed * cuttingDepth * feed * 10000;
+            type = "Drehmaschine";
         }
 
         public override double GetCalcMachineTime()
