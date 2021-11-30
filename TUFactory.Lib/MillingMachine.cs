@@ -32,7 +32,7 @@ namespace TUFactory.Lib
 
         public override void SetMachinedVolume()
         {
-            throw new NotImplementedException();
+            millingVolume = currentPart.GetNextMachiningVolume();
         }
     }
 }
