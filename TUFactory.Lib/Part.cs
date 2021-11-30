@@ -25,6 +25,8 @@ namespace TUFactory.Lib
             this.priority = priority;
             this.workInstructions = workInstructions;
             id = nextID++;
+            state = 1;
+            quality = 1;
         }
 
         public void DeleteMachiningStep() 

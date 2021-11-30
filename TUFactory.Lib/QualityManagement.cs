@@ -19,6 +19,8 @@ namespace TUFactory.Lib
             this.allowedQuality = allowedQuality;
             this.xCoordinate = xCoordinate;
             this.yCoordinate = yCoordinate;
+            goodParts = new List<Part>();
+            badParts = new List<Part>();
         }
 
         public void CheckQuality(Part part) 

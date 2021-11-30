@@ -18,7 +18,7 @@ namespace TUFactory.Lib
             this.cuttingSpeed = cuttingSpeed;
             this.cuttingDepth = cuttingDepth;
             this.feed = feed;
-            metalRemovalRate = cuttingSpeed * cuttingDepth * feed * 10000;
+            metalRemovalRate = cuttingSpeed * cuttingDepth * feed * 1000;
             type = "Drehmaschine";
         }
 

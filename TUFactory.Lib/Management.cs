@@ -20,6 +20,11 @@ namespace TUFactory.Lib
         public Management(QualityManagement qualityManagement)
         {
             this.qualityManagement = qualityManagement;
+            brokenMachines = new List<Machine>();
+            machines = new List<Machine>();
+            workingMachines = new List<Machine>();
+            openParts = new List<Part>();
+            finishedParts = new List<Part>();
         }
 
         public void AddMachine(Machine machine)
@@ -57,6 +62,8 @@ namespace TUFactory.Lib
                         openPart.SetState(2);
                         openPart.SetCurrentMachine(workingMachine);
                         openPart.SetQuality(openPart.GetQuality() - openPart.GetQuality() * workingMachine.GetInfluenceOnQuality());
+
+                        Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
                         break;
                     }
                 }
@@ -79,9 +86,9 @@ namespace TUFactory.Lib
             }
         }
 
-        public void ReadOrders()
+        public void ReadOrders(string file)
         {
-            var lines = File.ReadAllLines(@"C:\Users\SimonT\Documents\Uni\WS21-22\Ingenieurinformatik 2\Basisprojekte\2\v0\TeileListe_neu.csv").Skip(1);
+            var lines = File.ReadAllLines(file).Skip(1);
             allParts = new List<Part>();
             foreach (var line in lines) 
             {
@@ -91,8 +98,10 @@ namespace TUFactory.Lib
                 var workSteps = new List<WorkingStep>();
                 for (var i = 2; i < fields.Length; i += 2)
                     workSteps.Add(new WorkingStep(fields[i], double.Parse(fields[i + 1])));
-                
-                allParts.Add(new Part(workSteps, priority));
+
+                var part = new Part(workSteps, priority);
+                allParts.Add(part);
+                openParts.Add(part);
             }
         }
 
