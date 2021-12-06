@@ -35,19 +35,18 @@ namespace TUFactory.Lib
 
         public void Produce(int currentTime)
         {
-            //entfernen von kürzlich fertiggestellten Teilen
-            var newlyFinishedparts = openParts.Where(q => q.GetNumberOfOpenOperations() == 0);
-            finishedParts.AddRange(newlyFinishedparts);
-            foreach (var openPart in newlyFinishedparts) 
-            { 
-                openPart.SetState(3);
-                openParts.Remove(openPart);
-            }
+            var newlyFinishedparts = new List<Part>();
 
             foreach (var openPart in openParts)
             {
-                if (workingMachines.FirstOrDefault(q => !q.GetInUse() && openPart.GetNextMachineType() == q.GetMachineType()) is Machine workingMachine) 
+                //Teil fertig mit allen Bearbeitungsschritten
+                if (openPart.GetNumberOfOpenOperations() == 0) 
+                {
+                    openPart.SetState(3);
+                    newlyFinishedparts.Add(openPart);
+                }
                 //Teil wird in freier Maschine bearbeitet
+                else if (workingMachines.FirstOrDefault(q => !q.GetInUse() && openPart.GetNextMachineType() == q.GetMachineType()) is Machine workingMachine)
                 {
                     workingMachine.SetInUse(true);
                     workingMachine.SetCurrentPart(openPart);
@@ -61,6 +60,8 @@ namespace TUFactory.Lib
                     break;
                 }
             }
+            finishedParts.AddRange(newlyFinishedparts);
+            newlyFinishedparts.ForEach(q => openParts.Remove(q));
 
             //Bearbeitungsschritt eines Teils fertig
             foreach (var workingMachine in workingMachines.Where(q => currentTime >= q.GetEndTime())) 
@@ -100,7 +101,7 @@ namespace TUFactory.Lib
         public void SimulatePossibleError(int currentTime)
         {
             //Auftreten von Fehlern simulieren
-            var newlyBrokenMachines = workingMachines.Where(q => q.HasErrorOccured());
+            var newlyBrokenMachines = workingMachines.Where(q => q.HasErrorOccured()).ToList();
             brokenMachines.AddRange(newlyBrokenMachines);
             foreach (var newlyBrokenMachine in newlyBrokenMachines) 
             {

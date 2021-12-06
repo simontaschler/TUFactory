@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EmbeddedResource Include="TeileListe_neu.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TUFactory.Lib\TUFactory.Lib.csproj">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TUFactory.Lib;
@@ -12,7 +13,7 @@ namespace TUFactory.Cli
     {
         internal static void Main(string[] args)
         {
-            var orderLines = File.ReadAllLines(@"C:\Users\SimonT\Documents\Uni\WS21-22\Ingenieurinformatik 2\Basisprojekte\2\v0\TeileListe_neu.csv");
+            var orderLines = ResourceHelper.GetEmbeddedResourceLines(Assembly.GetExecutingAssembly(), "TUFactory.Cli.TeileListe_neu.csv");
             var qualityManagement = new QualityManagement(.95, 0, 0);
             var management = new Management(qualityManagement);
             management.AddMachine(new TurningMachine(1, 0, 75, .5, .1, 10, 10));
