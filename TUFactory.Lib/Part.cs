@@ -60,5 +60,13 @@ namespace TUFactory.Lib
 
         public override string ToString() =>
             $"Part {id} state: {state}";
+
+        //nur für UnitTest
+        public int GetId() =>
+            id;
+
+        //nur für UnitTest
+        public int GetState() =>
+            state;
     }
 }

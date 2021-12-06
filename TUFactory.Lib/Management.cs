@@ -141,5 +141,9 @@ namespace TUFactory.Lib
 
         public void WriteStates() => //GetStates()
             allParts.ForEach(q => Console.WriteLine(q));
+
+        //nur für UnitTest
+        public List<Part> GetAllParts() =>
+            allParts;
     }
 }

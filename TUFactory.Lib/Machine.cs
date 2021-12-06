@@ -58,7 +58,7 @@ namespace TUFactory.Lib
             type;
 
         public bool HasErrorOccured() => //PossibleError()
-            /*new Random().Next(1, 100) <= errorProbability ||*/ wear >= .75;
+            new Random().Next(1, 100) <= errorProbability || wear >= .75;
 
         public void Repair() => 
             wear = 0;

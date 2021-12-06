@@ -16,9 +16,9 @@ namespace TUFactory.Cli
             var orderLines = ResourceHelper.GetEmbeddedResourceLines(Assembly.GetExecutingAssembly(), "TUFactory.Cli.TeileListe_neu.csv");
             var qualityManagement = new QualityManagement(.95, 0, 0);
             var management = new Management(qualityManagement);
-            management.AddMachine(new TurningMachine(1, 0, 75, .5, .1, 10, 10));
-            management.AddMachine(new MillingMachine(2, 0, 25, 5, 20, 0, 10));
-            management.AddMachine(new GrindingMachine(3, 0, .02, 50, 30, 80, 20, 0));
+            management.AddMachine(new TurningMachine(1, 5, 75, .5, .1, 10, 10));
+            management.AddMachine(new MillingMachine(2, 5, 25, 5, 20, 0, 10));
+            management.AddMachine(new GrindingMachine(3, 5, .02, 50, 30, 80, 20, 0));
 
             management.ReadOrders(orderLines);
 

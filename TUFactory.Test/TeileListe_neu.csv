@@ -1,0 +1,6 @@
+﻿Teil;Prio;Maschine 1;Volumen 1;Maschine 2;Volumen 2;Maschine 3;Volumen 3 
+1;1;Drehmaschine;10000;Fräsmaschine;20000;;
+2;1;Drehmaschine;10000;Fräsmaschine;25000;Schleifmaschine;2
+3;2;Fräsmaschine;30000;Drehmaschine;5000;Fräsmaschine;10000
+4;3;Schleifmaschine;1;Drehmaschine;5000;;
+5;2;Drehmaschine;10000;Fräsmaschine;20000;;
