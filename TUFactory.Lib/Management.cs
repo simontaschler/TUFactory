@@ -10,12 +10,12 @@ namespace TUFactory.Lib
     public class Management
     {
         private List<Part> allParts;
-        private List<Machine> brokenMachines;
-        private List<Part> finishedParts;
-        private List<Machine> machines;
-        private List<Part> openParts;
-        private QualityManagement qualityManagement;
-        private List<Machine> workingMachines;
+        private readonly List<Machine> brokenMachines;
+        private readonly List<Part> finishedParts;
+        private readonly List<Machine> machines;
+        private readonly List<Part> openParts;
+        private readonly QualityManagement qualityManagement;
+        private readonly List<Machine> workingMachines;
 
         public Management(QualityManagement qualityManagement)
         {
@@ -33,64 +33,53 @@ namespace TUFactory.Lib
             workingMachines.Add(machine);
         }
 
-        public void Produce(int currentTime)        //Schleifen zusammenfassen, mit Linq massiv zu kürzen
+        public void Produce(int currentTime)
         {
-            var newlyFinishedparts = new List<Part>();
-            foreach (var openPart in openParts) 
-            { 
-                if (openPart.GetNumberOfOpenOperations() == 0) 
-                {
-                    openPart.SetState(3);
-                    newlyFinishedparts.Add(openPart);
-                }
-            }
+            //entfernen von kürzlich fertiggestellten Teilen
+            var newlyFinishedparts = openParts.Where(q => q.GetNumberOfOpenOperations() == 0);
             finishedParts.AddRange(newlyFinishedparts);
-
-            foreach (var newlyFinishedPart in newlyFinishedparts)
-                openParts.Remove(newlyFinishedPart);
+            foreach (var openPart in newlyFinishedparts) 
+            { 
+                openPart.SetState(3);
+                openParts.Remove(openPart);
+            }
 
             foreach (var openPart in openParts)
             {
-                foreach (var workingMachine in workingMachines) 
-                { 
-                    if (!workingMachine.GetInUse() && openPart.GetNextMachineType() == workingMachine.GetMachineType()) 
-                    {
-                        workingMachine.SetInUse(true);
-                        workingMachine.SetCurrentPart(openPart);
-                        workingMachine.SetMachinedVolume();
-                        workingMachine.SetTimesAndCalcWear(currentTime, currentTime + workingMachine.GetCalcMachineTime());
-                        openPart.SetState(2);
-                        openPart.SetCurrentMachine(workingMachine);
-                        openPart.SetQuality(openPart.GetQuality() - openPart.GetQuality() * workingMachine.GetInfluenceOnQuality());
+                if (workingMachines.FirstOrDefault(q => !q.GetInUse() && openPart.GetNextMachineType() == q.GetMachineType()) is Machine workingMachine) 
+                //Teil wird in freier Maschine bearbeitet
+                {
+                    workingMachine.SetInUse(true);
+                    workingMachine.SetCurrentPart(openPart);
+                    workingMachine.SetMachinedVolume();
+                    workingMachine.SetTimesAndCalcWear(currentTime, currentTime + workingMachine.GetCalcMachineTime());
+                    openPart.SetState(2);
+                    openPart.SetCurrentMachine(workingMachine);
+                    openPart.SetQuality(openPart.GetQuality() - openPart.GetQuality() * workingMachine.GetInfluenceOnQuality());
 
-                        Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
-                        break;
-                    }
+                    Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
+                    break;
                 }
             }
 
-            foreach (var workingMachine in workingMachines) 
+            //Bearbeitungsschritt eines Teils fertig
+            foreach (var workingMachine in workingMachines.Where(q => currentTime >= q.GetEndTime())) 
             { 
-                if (!workingMachine.GetInRepair() && currentTime >= workingMachine.GetEndTime()) //Abfangen von Maschinenausfällen
+                workingMachine.SetInUse(false);
+                if (workingMachine.GetCurrentPart() is Part currentPart) 
                 {
-                    workingMachine.SetInUse(false);
-                    if (workingMachine.GetCurrentPart() != null) 
-                    {
-                        var currentPart = workingMachine.GetCurrentPart();
-                        currentPart.SetPartFree();
-                        currentPart.DeleteMachiningStep();
-                        workingMachine.SetCurrentPart(null);
-                        Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
-                    }
+                    currentPart.SetPartFree();
+                    currentPart.DeleteMachiningStep();
+                    workingMachine.SetCurrentPart(null);
+                    Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
                 }
             }
         }
 
-        public void ReadOrders(string file)
+        public void ReadOrders(IEnumerable<string> lines)
         {
-            var lines = File.ReadAllLines(file).Skip(1);
             allParts = new List<Part>();
-            foreach (var line in lines) 
+            foreach (var line in lines.Skip(1)) 
             {
                 var fields = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 var priority = int.Parse(fields[1]);
@@ -105,42 +94,33 @@ namespace TUFactory.Lib
             }
         }
 
-        public void SendToQualityCheck()
-        {
-            foreach (var finishedPart in finishedParts)
-                qualityManagement.CheckQuality(finishedPart);
-        }
+        public void SendToQualityCheck() => 
+            finishedParts.ForEach(q => qualityManagement.CheckQuality(q));
 
-        public void SimulatePossibleError(int currentTime) //Schleifen zusammenfassen, mit Linq massiv zu kürzen
+        public void SimulatePossibleError(int currentTime)
         {
-            var newlyBrokenMachines = new List<Machine>();
-            foreach (var machine in workingMachines) 
-            {
-                if (machine.HasErrorOccured())
-                {
-                    newlyBrokenMachines.Add(machine);
-                    Console.WriteLine($"Fehler bei {machine} aufgetreten");
-                }
-            }
+            //Auftreten von Fehlern simulieren
+            var newlyBrokenMachines = workingMachines.Where(q => q.HasErrorOccured());
             brokenMachines.AddRange(newlyBrokenMachines);
+            foreach (var newlyBrokenMachine in newlyBrokenMachines) 
+            {
+                Console.WriteLine($"Fehler bei {newlyBrokenMachine} aufgetreten");
+                workingMachines.Remove(newlyBrokenMachine);
+            }
 
-            foreach (var brokenMachine in brokenMachines) 
-            { 
-                if (!brokenMachine.GetInRepair()) 
+            var newlyRepairedMachines = new List<Machine>();
+            foreach (var brokenMachine in brokenMachines)
+            {
+                //beschädigte Maschinen in Reparatur schicken
+                if (!brokenMachine.GetInRepair())
                 {
                     brokenMachine.SetInRepair(true);
                     brokenMachine.AddToEndTime(3);
                     Console.WriteLine($"Reparatur von {brokenMachine} beginnt");
                 }
-            }
 
-            foreach (var newlyBrokenMachine in newlyBrokenMachines) 
-                workingMachines.Remove(newlyBrokenMachine);
-
-            var newlyRepairedMachines = new List<Machine>();
-            foreach (var brokenMachine in brokenMachines)
-            {
-                if (currentTime >= brokenMachine.GetEndTime()) 
+                //kürzlich reparierte Maschinen
+                if (currentTime >= brokenMachine.GetEndTime())
                 {
                     brokenMachine.SetInUse(false);
                     brokenMachine.SetInRepair(false);
@@ -155,16 +135,10 @@ namespace TUFactory.Lib
                 brokenMachines.Remove(newlyRepairedMachine);
         }
 
-        public void WriteAllQualities() //evtl. Name ändern
-        {
-            foreach (var part in allParts)
-                Console.WriteLine($"{part} Qualität: {part.GetQuality()}");
-        }
+        public void WriteAllQualities() => 
+            allParts.ForEach(q => Console.WriteLine($"{q} Qualität: {q.GetQuality()}"));
 
-        public void WriteStates() //GetStates()
-        {
-            foreach (var part in allParts)
-                Console.WriteLine(part);
-        }
+        public void WriteStates() => //GetStates()
+            allParts.ForEach(q => Console.WriteLine(q));
     }
 }

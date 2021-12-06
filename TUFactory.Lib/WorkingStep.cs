@@ -8,8 +8,8 @@ namespace TUFactory.Lib
 {
     public class WorkingStep
     {
-        private string machineType;
-        private double volume;
+        private readonly string machineType;
+        private readonly double volume;
 
         public WorkingStep(string machineType, double volume)
         {
@@ -17,14 +17,10 @@ namespace TUFactory.Lib
             this.volume = volume;
         }
 
-        public string GetMachineType() //durch Property zu ersetzen
-        {
-            return machineType;
-        }
+        public string GetMachineType() => //durch Property zu ersetzen
+            machineType;
 
-        public double GetVolume() //durch Property zu ersetzen
-        {
-            return volume;
-        }
+        public double GetVolume() => //durch Property zu ersetzen
+            volume;
     }
 }

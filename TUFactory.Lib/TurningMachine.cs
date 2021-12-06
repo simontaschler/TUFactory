@@ -8,9 +8,9 @@ namespace TUFactory.Lib
 {
     public class TurningMachine : Machine
     {
-        private double cuttingDepth;
-        private double cuttingSpeed;
-        private double feed;
+        private readonly double cuttingDepth;
+        private readonly double cuttingSpeed;
+        private readonly double feed;
         private double turnedVolume;
 
         public TurningMachine(int id, int errorProbability, double cuttingSpeed, double cuttingDepth, double feed, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
@@ -22,19 +22,13 @@ namespace TUFactory.Lib
             type = "Drehmaschine";
         }
 
-        public override double GetCalcMachineTime()
-        {
-            return Math.Ceiling(turnedVolume / metalRemovalRate); 
-        }
+        public override double GetCalcMachineTime() => 
+            Math.Ceiling(turnedVolume / metalRemovalRate);
 
-        public override double GetInfluenceOnQuality()
-        {
-            return wear / 45;
-        }
+        public override double GetInfluenceOnQuality() => 
+            wear / 45;
 
-        public override void SetMachinedVolume()
-        {
+        public override void SetMachinedVolume() => 
             turnedVolume = currentPart.GetNextMachiningVolume();
-        }
     }
 }
