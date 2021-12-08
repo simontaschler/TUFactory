@@ -31,13 +31,13 @@ namespace TUFactory.Test
 
             var allParts = management.GetAllParts();
 
-            var compStates = new List<int> { 2, 2, 2, 4, 2 };
+            var compStates = new List<int> { 4, 2, 2, 4, 2 };
             var compQualities = new List<double>
             {
-                .968919466666667,
-                .993333333333333,
+                .976733333333333,
+                .9834,
                 .973728888888889,
-                .991111111111112,
+                .991111111111111,
                 .987777777777778
             };
 

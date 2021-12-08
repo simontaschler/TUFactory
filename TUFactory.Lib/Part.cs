@@ -50,7 +50,8 @@ namespace TUFactory.Lib
         public void SetCurrentMachine(Machine value) => //durch Property zu ersetzen
             currentMachine = value;
 
-        public void SetPartFree() => currentMachine = null;
+        public void SetPartFree() => 
+            currentMachine = null;
 
         public void SetQuality(double value) => //durch Property zu ersetzen
             quality = value;

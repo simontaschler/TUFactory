@@ -35,12 +35,24 @@ namespace TUFactory.Lib
 
         public void Produce(int currentTime)
         {
-            var newlyFinishedparts = new List<Part>();
+            //Bearbeitungsschritt eines Teils fertig
+            foreach (var workingMachine in workingMachines.Where(q => currentTime >= q.GetEndTime()))
+            {
+                workingMachine.SetInUse(false);
+                if (workingMachine.GetCurrentPart() is Part currentPart)
+                {
+                    currentPart.SetPartFree();
+                    currentPart.DeleteMachiningStep();
+                    workingMachine.SetCurrentPart(null);
+                    Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
+                }
+            }
 
-            foreach (var openPart in openParts)
+            var newlyFinishedparts = new List<Part>();
+            foreach (var openPart in openParts) 
             {
                 //Teil fertig mit allen Bearbeitungsschritten
-                if (openPart.GetNumberOfOpenOperations() == 0) 
+                if (openPart.GetNumberOfOpenOperations() == 0)
                 {
                     openPart.SetState(3);
                     newlyFinishedparts.Add(openPart);
@@ -62,19 +74,6 @@ namespace TUFactory.Lib
             }
             finishedParts.AddRange(newlyFinishedparts);
             newlyFinishedparts.ForEach(q => openParts.Remove(q));
-
-            //Bearbeitungsschritt eines Teils fertig
-            foreach (var workingMachine in workingMachines.Where(q => currentTime >= q.GetEndTime())) 
-            { 
-                workingMachine.SetInUse(false);
-                if (workingMachine.GetCurrentPart() is Part currentPart) 
-                {
-                    currentPart.SetPartFree();
-                    currentPart.DeleteMachiningStep();
-                    workingMachine.SetCurrentPart(null);
-                    Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
-                }
-            }
         }
 
         public void ReadOrders(IEnumerable<string> lines)
@@ -137,7 +136,7 @@ namespace TUFactory.Lib
         }
 
         public void WriteAllQualities() => 
-            allParts.ForEach(q => Console.WriteLine($"{q} Qualität: {q.GetQuality()}"));
+            allParts.ForEach(q => Console.WriteLine($"{q} Qualität: {q.GetQuality():P4}"));
 
         public void WriteStates() => //GetStates()
             allParts.ForEach(q => Console.WriteLine(q));
