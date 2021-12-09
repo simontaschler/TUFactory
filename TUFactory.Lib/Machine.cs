@@ -57,8 +57,11 @@ namespace TUFactory.Lib
         public string GetMachineType() => //durch Property zu ersetzen
             type;
 
-        public bool HasErrorOccured() => //PossibleError()
-            new Random().Next(1, 100) <= errorProbability || wear >= .75;
+        public bool HasErrorOccured() //PossibleError()
+        {
+            System.Threading.Thread.Sleep(1);
+            return new Random().Next(1, 100) <= errorProbability || wear >= .75;
+        }
 
         public void Repair() => 
             wear = 0;

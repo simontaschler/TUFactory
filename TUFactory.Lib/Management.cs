@@ -69,7 +69,6 @@ namespace TUFactory.Lib
                     openPart.SetQuality(openPart.GetQuality() - openPart.GetQuality() * workingMachine.GetInfluenceOnQuality());
 
                     Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
-                    break;
                 }
             }
             finishedParts.AddRange(newlyFinishedparts);
