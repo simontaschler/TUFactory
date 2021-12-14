@@ -73,7 +73,8 @@ namespace TUFactory.Lib
 
         public bool HasErrorOccured() //PossibleError()
         {
-            return new Random().Next(0, 99) <= errorProbability || wear >= .75;
+            System.Threading.Thread.Sleep(1);
+            return new Random().Next(1, 100) <= errorProbability || wear >= .75;
         }
 
         public void Repair()

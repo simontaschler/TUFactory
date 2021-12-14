@@ -35,6 +35,22 @@ namespace TUFactory.Lib
 
         public void Produce(int currentTime)        //Schleifen zusammenfassen, mit Linq massiv zu kürzen
         {
+            foreach (var workingMachine in workingMachines)
+            {
+                if (currentTime >= workingMachine.GetEndTime())
+                {
+                    workingMachine.SetInUse(false);
+                    if (workingMachine.GetCurrentPart() != null)
+                    {
+                        var currentPart = workingMachine.GetCurrentPart();
+                        currentPart.SetPartFree();
+                        currentPart.DeleteMachiningStep();
+                        workingMachine.SetCurrentPart(null);
+                        Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
+                    }
+                }
+            }
+
             var newlyFinishedparts = new List<Part>();
             foreach (var openPart in openParts) 
             { 
@@ -65,22 +81,6 @@ namespace TUFactory.Lib
 
                         Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
                         break;
-                    }
-                }
-            }
-
-            foreach (var workingMachine in workingMachines) 
-            { 
-                if (!workingMachine.GetInRepair() && currentTime >= workingMachine.GetEndTime()) //Abfangen von Maschinenausfällen
-                {
-                    workingMachine.SetInUse(false);
-                    if (workingMachine.GetCurrentPart() != null) 
-                    {
-                        var currentPart = workingMachine.GetCurrentPart();
-                        currentPart.SetPartFree();
-                        currentPart.DeleteMachiningStep();
-                        workingMachine.SetCurrentPart(null);
-                        Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
                     }
                 }
             }
