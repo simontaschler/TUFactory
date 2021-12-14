@@ -14,6 +14,8 @@ namespace TUFactory.Lib
         private readonly double infeed;
         private readonly double speedRelation;
 
+        public override string Type => "Schleifmaschine";
+
         public GrindingMachine(int id, int errorProbability, double infeed, double grindingWidth, double cuttingSpeed, double speedRelation, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
         {
             this.infeed = infeed;
@@ -21,13 +23,12 @@ namespace TUFactory.Lib
             this.cuttingSpeed = cuttingSpeed;
             this.speedRelation = speedRelation;
             metalRemovalRate = infeed * grindingWidth * cuttingSpeed / speedRelation;
-            type = "Schleifmaschine";
         }
 
         public override double GetCalcMachineTime() => 
             Math.Ceiling(grindingVolume / metalRemovalRate);
 
         public override void SetMachinedVolume() => 
-            grindingVolume = currentPart.GetNextMachiningVolume();
+            grindingVolume = CurrentPart.GetNextMachiningVolume();
     }
 }

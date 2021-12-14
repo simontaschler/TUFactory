@@ -13,7 +13,7 @@ namespace TUFactory.Lib
         private readonly List<Machine> brokenMachines;
         private readonly List<Part> finishedParts;
         private readonly List<Machine> machines;
-        private readonly List<Part> openParts;
+        private List<Part> openParts;
         private readonly QualityManagement qualityManagement;
         private readonly List<Machine> workingMachines;
 
@@ -36,14 +36,14 @@ namespace TUFactory.Lib
         public void Produce(int currentTime)
         {
             //Bearbeitungsschritt eines Teils fertig
-            foreach (var workingMachine in workingMachines.Where(q => currentTime >= q.GetEndTime()))
+            foreach (var workingMachine in workingMachines.Where(q => currentTime >= q.EndTimeInUse))
             {
-                workingMachine.SetInUse(false);
-                if (workingMachine.GetCurrentPart() is Part currentPart)
+                workingMachine.InUse = false;
+                if (workingMachine.CurrentPart is Part currentPart)
                 {
                     currentPart.SetPartFree();
                     currentPart.DeleteMachiningStep();
-                    workingMachine.SetCurrentPart(null);
+                    workingMachine.CurrentPart = null;
                     Console.WriteLine($"{workingMachine} ist wieder frei und bereit zum Bearbeiten neuer Teile");
                 }
             }
@@ -54,19 +54,19 @@ namespace TUFactory.Lib
                 //Teil fertig mit allen Bearbeitungsschritten
                 if (openPart.GetNumberOfOpenOperations() == 0)
                 {
-                    openPart.SetState(State.Concluded);
+                    openPart.State = State.Concluded;
                     newlyFinishedparts.Add(openPart);
                 }
                 //Teil wird in freier Maschine bearbeitet
-                else if (workingMachines.FirstOrDefault(q => !q.GetInUse() && openPart.GetNextMachineType() == q.GetMachineType()) is Machine workingMachine)
+                else if (workingMachines.FirstOrDefault(q => !q.InUse && openPart.GetNextMachineType() == q.Type) is Machine workingMachine)
                 {
-                    workingMachine.SetInUse(true);
-                    workingMachine.SetCurrentPart(openPart);
+                    workingMachine.InUse = true;
+                    workingMachine.CurrentPart = openPart;
                     workingMachine.SetMachinedVolume();
                     workingMachine.SetTimesAndCalcWear(currentTime, currentTime + workingMachine.GetCalcMachineTime());
-                    openPart.SetState(State.WorkInProgress);
-                    openPart.SetCurrentMachine(workingMachine);
-                    openPart.SetQuality(openPart.GetQuality() - openPart.GetQuality() * workingMachine.GetInfluenceOnQuality());
+                    openPart.State = State.WorkInProgress;
+                    openPart.CurrentMachine = workingMachine;
+                    openPart.Quality -= openPart.Quality * workingMachine.GetInfluenceOnQuality();
 
                     Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
                 }
@@ -89,8 +89,8 @@ namespace TUFactory.Lib
 
                 var part = new Part(workSteps, priority);
                 allParts.Add(part);
-                openParts.Add(part);
             }
+            openParts = new List<Part>(allParts);
         }
 
         public void SendToQualityCheck() => 
@@ -111,18 +111,18 @@ namespace TUFactory.Lib
             foreach (var brokenMachine in brokenMachines)
             {
                 //beschädigte Maschinen in Reparatur schicken
-                if (!brokenMachine.GetInRepair())
+                if (!brokenMachine.InRepair)
                 {
-                    brokenMachine.SetInRepair(true);
+                    brokenMachine.InRepair = true;
                     brokenMachine.AddToEndTime(3);
                     Console.WriteLine($"Reparatur von {brokenMachine} beginnt");
                 }
 
                 //kürzlich reparierte Maschinen
-                if (currentTime >= brokenMachine.GetEndTime())
+                if (currentTime >= brokenMachine.EndTimeInUse)
                 {
-                    brokenMachine.SetInUse(false);
-                    brokenMachine.SetInRepair(false);
+                    brokenMachine.InUse = false;
+                    brokenMachine.InRepair = false;
                     newlyRepairedMachines.Add(brokenMachine);
                     brokenMachine.Repair();
                     Console.WriteLine($"{brokenMachine} wurde repariert und ist wieder frei");
@@ -135,13 +135,13 @@ namespace TUFactory.Lib
         }
 
         public void WriteAllQualities() => 
-            allParts.ForEach(q => Console.WriteLine($"{q} Qualität: {q.GetQuality():P4}"));
+            allParts.ForEach(q => Console.WriteLine($"{q} Qualität: {q.Quality:P4}"));
 
         public void WriteStates() => //GetStates()
             allParts.ForEach(q => Console.WriteLine(q));
 
         //nur für UnitTest
-        public List<Part> GetAllParts() =>
+        public List<Part> AllParts =>
             allParts;
     }
 }

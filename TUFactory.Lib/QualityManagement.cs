@@ -8,11 +8,11 @@ namespace TUFactory.Lib
 {
     public class QualityManagement
     {
-        private double allowedQuality;
-        private List<Part> badParts;
-        private List<Part> goodParts;
-        private int xCoordinate;
-        private int yCoordinate;
+        private readonly double allowedQuality;
+        private readonly List<Part> badParts;
+        private readonly List<Part> goodParts;
+        private readonly int xCoordinate;
+        private readonly int yCoordinate;
 
         public QualityManagement(double allowedQuality, int xCoordinate, int yCoordinate)
         {
@@ -25,15 +25,15 @@ namespace TUFactory.Lib
 
         public void CheckQuality(Part part) 
         {
-            if (part.GetQuality() <= allowedQuality) 
+            if (part.Quality <= allowedQuality) 
             {
                 badParts.Add(part);
-                part.SetState(State.QualityNotOk);
+                part.State = State.QualityNotOk;
             }
             else
             {
                 goodParts.Add(part);
-                part.SetState(State.QualityOk);
+                part.State = State.QualityOk;
             }
         }
     }

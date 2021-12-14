@@ -29,7 +29,7 @@ namespace TUFactory.Test
                 management.SimulatePossibleError(timeStep);
             }
 
-            var allParts = management.GetAllParts();
+            var allParts = management.AllParts;
 
             var compStates = new List<int> { 4, 2, 2, 4, 2 };
             var compQualities = new List<double>
@@ -45,8 +45,8 @@ namespace TUFactory.Test
 
             for (var i = 0; i < compStates.Count; i++) 
             {
-                Assert.AreEqual(compStates[i], (int)allParts[i].GetState());
-                Assert.AreEqual(compQualities[i], allParts[i].GetQuality(), 1E-15);
+                Assert.AreEqual(compStates[i], (int)allParts[i].State);
+                Assert.AreEqual(compQualities[i], allParts[i].Quality, 1E-15);
             }
         }
     }

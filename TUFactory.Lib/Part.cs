@@ -18,24 +18,25 @@ namespace TUFactory.Lib
     //Methode ExecuteNextWorkStep hinzufügen um Fehleranfälligkeit zu senken
     public class Part
     {
-        private Machine currentMachine;
         private readonly int currentXPosition;
         private readonly int currentYPosition;
-        private readonly int id;
         private readonly int priority;
-        private double quality;
-        private State state;      //1, 2, 3, 4, 5 => mit enum zu ersetzen
         private readonly List<WorkingStep> workInstructions;
 
         private static int nextID = 1;
+
+        public double Quality { get; set; }
+        public Machine CurrentMachine { private get; set; }
+        public State State { get; set; } //get nur für Unit-Test
+        public int ID { get; }
 
         public Part(List<WorkingStep> workInstructions, int priority) 
         {
             this.priority = priority;
             this.workInstructions = workInstructions;
-            id = nextID++;
-            state = State.WorkPiece;
-            quality = 1;
+            ID = nextID++;
+            State = State.WorkPiece;
+            Quality = 1;
         }
 
         public void DeleteMachiningStep() 
@@ -45,38 +46,18 @@ namespace TUFactory.Lib
         }
 
         public string GetNextMachineType() => 
-            workInstructions.First().GetMachineType();
+            workInstructions.First().MachineType;
 
         public double GetNextMachiningVolume() => 
-            workInstructions.First().GetVolume();
+            workInstructions.First().Volume;
 
         public int GetNumberOfOpenOperations() => 
             workInstructions.Count();
 
-        public double GetQuality() => //durch Property zu ersetzen
-            quality;
-
-        public void SetCurrentMachine(Machine value) => //durch Property zu ersetzen
-            currentMachine = value;
-
         public void SetPartFree() => 
-            currentMachine = null;
-
-        public void SetQuality(double value) => //durch Property zu ersetzen
-            quality = value;
-
-        public void SetState(State value) => //durch Property zu ersetzen
-            state = value;
+            CurrentMachine = null;
 
         public override string ToString() =>
-            $"Part {id} state: {(int)state}";
-
-        //nur für UnitTest
-        public int GetId() =>
-            id;
-
-        //nur für UnitTest
-        public State GetState() =>
-            state;
+            $"Part {ID} state: {(int)State}";
     }
 }

@@ -13,13 +13,14 @@ namespace TUFactory.Lib
         private readonly double feedingSpeed;
         private double millingVolume;
 
+        public override string Type => "Fräsmaschine";
+
         public MillingMachine(int id, int errorProbability, double cuttingWidth, double cuttingDepth, double feedingSpeed, int xCoordinate, int yCoordinate) : base(id, errorProbability, xCoordinate, yCoordinate)
         {
             this.cuttingWidth = cuttingWidth;
             this.cuttingDepth = cuttingDepth;
             this.feedingSpeed = feedingSpeed;
             metalRemovalRate = cuttingDepth * cuttingWidth * feedingSpeed;
-            type = "Fräsmaschine";
         }
 
         public override double GetCalcMachineTime() => 
@@ -29,6 +30,6 @@ namespace TUFactory.Lib
             wear / 50;
 
         public override void SetMachinedVolume() => 
-            millingVolume = currentPart.GetNextMachiningVolume();
+            millingVolume = CurrentPart.GetNextMachiningVolume();
     }
 }

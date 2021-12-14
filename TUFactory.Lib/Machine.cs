@@ -8,19 +8,21 @@ namespace TUFactory.Lib
 {
     public abstract class Machine
     {
-        private double startTimeInUse;  //time sonst als int?
-        private double endTimeInUse;  //time sonst als int?
         private readonly int errorProbability = 0;
-        private bool inRepair;
-        private bool inUse;
         private readonly int id;
         private readonly int xCoordinate;
         private readonly int yCoordinate;
 
-        protected Part currentPart;
-        protected string type;      //überflüssig, Type durch erbende Klassen bereits definiert
         protected double metalRemovalRate;
         protected double wear;
+
+        public Part CurrentPart { get; set; }
+        public bool InRepair { get; set; }
+        public bool InUse { get; set; }
+        public double StartTimeInUse { get; private set; } //time sonst als int?
+        public double EndTimeInUse { get; private set; }
+
+        public abstract string Type { get; }
 
         public Machine(int id, int errorProbability, int xCoordinate, int yCoordinate)
         {
@@ -37,25 +39,10 @@ namespace TUFactory.Lib
         public abstract void SetMachinedVolume(); //Name zu ändern, kein Set ohne Parameter
 
         public void AddToEndTime(int endTime) => 
-            endTimeInUse += endTime;
-
-        public Part GetCurrentPart() => //durch Property zu ersetzen
-            currentPart;
-
-        public double GetEndTime() => //durch Property zu ersetzen
-            endTimeInUse;
+            EndTimeInUse += endTime;
 
         public virtual double GetInfluenceOnQuality() => 
             0;
-
-        public bool GetInRepair() => //durch Property zu ersetzen
-            inRepair;
-
-        public bool GetInUse() => //durch Property zu ersetzen
-            inUse;
-
-        public string GetMachineType() => //durch Property zu ersetzen
-            type;
 
         public bool HasErrorOccured() //PossibleError()
         {
@@ -66,23 +53,14 @@ namespace TUFactory.Lib
         public void Repair() => 
             wear = 0;
 
-        public void SetCurrentPart(Part value) => //durch Property ersetzen
-            currentPart = value;
-
-        public void SetInRepair(bool value) => //durch Property ersetzen, mehr Sinn als private das von Repair aufgerufen wird
-            inRepair = value;
-
-        public void SetInUse(bool value) => //durch Property ersetzen, evtl. auch als private
-            inUse = value;
-
         public void SetTimesAndCalcWear(double currentTime, double endTime) //Zeit int & double gemischt
         {
-            startTimeInUse = currentTime;
-            endTimeInUse = endTime;
+            StartTimeInUse = currentTime;
+            EndTimeInUse = endTime;
             wear += (endTime - currentTime) / 20;
         }
 
         public override string ToString() =>
-            $"{GetMachineType()} {id}"; //Methode statt Feld für Umstellung auf Properties
+            $"{Type} {id}";
     }
 }
