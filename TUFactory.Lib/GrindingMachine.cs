@@ -25,10 +25,10 @@ namespace TUFactory.Lib
             metalRemovalRate = infeed * grindingWidth * cuttingSpeed / speedRelation;
         }
 
-        public override double GetCalcMachineTime() => 
-            Math.Ceiling(grindingVolume / metalRemovalRate);
-
-        public override void SetMachinedVolume() => 
+        public override double CalcMachineTime() 
+        {
             grindingVolume = CurrentPart.GetNextMachiningVolume();
+            return Math.Ceiling(grindingVolume / metalRemovalRate);
+        }
     }
 }

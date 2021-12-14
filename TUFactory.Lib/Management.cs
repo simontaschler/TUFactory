@@ -60,14 +60,7 @@ namespace TUFactory.Lib
                 //Teil wird in freier Maschine bearbeitet
                 else if (workingMachines.FirstOrDefault(q => !q.InUse && openPart.GetNextMachineType() == q.Type) is Machine workingMachine)
                 {
-                    workingMachine.InUse = true;
-                    workingMachine.CurrentPart = openPart;
-                    workingMachine.SetMachinedVolume();
-                    workingMachine.SetTimesAndCalcWear(currentTime, currentTime + workingMachine.GetCalcMachineTime());
-                    openPart.State = State.WorkInProgress;
-                    openPart.CurrentMachine = workingMachine;
-                    openPart.Quality -= openPart.Quality * workingMachine.GetInfluenceOnQuality();
-
+                    openPart.ExecuteNextWorkstep(currentTime, workingMachine);
                     Console.WriteLine($"{openPart} wird in {workingMachine} bearbeitet");
                 }
             }

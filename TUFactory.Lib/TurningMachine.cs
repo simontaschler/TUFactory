@@ -23,13 +23,13 @@ namespace TUFactory.Lib
             metalRemovalRate = cuttingSpeed * cuttingDepth * feed * 1000;
         }
 
-        public override double GetCalcMachineTime() => 
-            Math.Ceiling(turnedVolume / metalRemovalRate);
+        public override double CalcMachineTime()
+        {
+            turnedVolume = CurrentPart.GetNextMachiningVolume();
+            return Math.Ceiling(turnedVolume / metalRemovalRate);
+        }
 
         public override double GetInfluenceOnQuality() => 
             wear / 45;
-
-        public override void SetMachinedVolume() => 
-            turnedVolume = CurrentPart.GetNextMachiningVolume();
     }
 }

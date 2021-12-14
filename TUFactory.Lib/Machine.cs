@@ -35,8 +35,9 @@ namespace TUFactory.Lib
             //errorProbability = 0;
         }
 
-        public abstract double GetCalcMachineTime(); //Name zu ändern, kein GetCalc
-        public abstract void SetMachinedVolume(); //Name zu ändern, kein Set ohne Parameter
+        public abstract double CalcMachineTime(); //Name zu ändern, kein GetCalc
+        //Methode erhöht Fehlerpotenzial massiv, da Aufruf erforderlich ist, um bei CalcMachineTime richtige Werte zu erhalten
+        //public abstract void SetMachinedVolume(); //Name zu ändern, kein Set ohne Parameter
 
         public void AddToEndTime(int endTime) => 
             EndTimeInUse += endTime;

@@ -39,6 +39,17 @@ namespace TUFactory.Lib
             Quality = 1;
         }
 
+        //Bündeln der Aufrufe um Fehlerpotenzial zu minimieren
+        public void ExecuteNextWorkstep(int currentTime, Machine nextMachine) 
+        {
+            nextMachine.InUse = true;
+            nextMachine.CurrentPart = this;
+            nextMachine.SetTimesAndCalcWear(currentTime, currentTime + nextMachine.CalcMachineTime());
+            State = State.WorkInProgress;
+            CurrentMachine = nextMachine;
+            Quality -= Quality * nextMachine.GetInfluenceOnQuality();
+        }
+
         public void DeleteMachiningStep() 
         {
             if (workInstructions.Count > 0)
