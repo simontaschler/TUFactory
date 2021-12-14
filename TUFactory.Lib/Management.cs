@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
@@ -49,7 +46,7 @@ namespace TUFactory.Lib
             }
 
             var newlyFinishedparts = new List<Part>();
-            foreach (var openPart in openParts) 
+            foreach (var openPart in openParts)
             {
                 //Teil fertig mit allen Bearbeitungsschritten
                 if (openPart.GetNumberOfOpenOperations() == 0)
@@ -71,7 +68,7 @@ namespace TUFactory.Lib
         public void ReadOrders(IEnumerable<string> lines)
         {
             allParts = new List<Part>();
-            foreach (var line in lines.Skip(1)) 
+            foreach (var line in lines.Skip(1))
             {
                 var fields = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 var priority = int.Parse(fields[1]);
@@ -86,7 +83,7 @@ namespace TUFactory.Lib
             openParts = new List<Part>(allParts);
         }
 
-        public void SendToQualityCheck() => 
+        public void SendToQualityCheck() =>
             finishedParts.ForEach(q => qualityManagement.CheckQuality(q));
 
         public void SimulatePossibleError(int currentTime)
@@ -94,7 +91,7 @@ namespace TUFactory.Lib
             //Auftreten von Fehlern simulieren
             var newlyBrokenMachines = workingMachines.Where(q => q.HasErrorOccured()).ToList();
             brokenMachines.AddRange(newlyBrokenMachines);
-            foreach (var newlyBrokenMachine in newlyBrokenMachines) 
+            foreach (var newlyBrokenMachine in newlyBrokenMachines)
             {
                 Console.WriteLine($"Fehler bei {newlyBrokenMachine} aufgetreten");
                 workingMachines.Remove(newlyBrokenMachine);
@@ -127,7 +124,7 @@ namespace TUFactory.Lib
                 brokenMachines.Remove(newlyRepairedMachine);
         }
 
-        public void WriteAllQualities() => 
+        public void WriteAllQualities() =>
             allParts.ForEach(q => Console.WriteLine($"{q} Qualität: {q.Quality:P4}"));
 
         public void WriteStates() => //GetStates()

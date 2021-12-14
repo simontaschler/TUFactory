@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
@@ -29,7 +25,7 @@ namespace TUFactory.Lib
             return Math.Ceiling(turnedVolume / metalRemovalRate);
         }
 
-        public override double GetInfluenceOnQuality() => 
+        public override double GetInfluenceOnQuality() =>
             wear / 45;
     }
 }

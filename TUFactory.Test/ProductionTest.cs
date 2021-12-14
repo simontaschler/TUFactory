@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using TUFactory.Lib;
 
@@ -43,7 +41,7 @@ namespace TUFactory.Test
 
             Assert.AreEqual(compStates.Count, allParts.Count);
 
-            for (var i = 0; i < compStates.Count; i++) 
+            for (var i = 0; i < compStates.Count; i++)
             {
                 Assert.AreEqual(compStates[i], (int)allParts[i].State);
                 Assert.AreEqual(compQualities[i], allParts[i].Quality, 1E-15);

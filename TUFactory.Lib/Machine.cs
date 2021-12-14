@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
@@ -39,10 +35,10 @@ namespace TUFactory.Lib
         //Methode erhöht Fehlerpotenzial massiv, da Aufruf erforderlich ist, um bei CalcMachineTime richtige Werte zu erhalten
         //public abstract void SetMachinedVolume(); //Name zu ändern, kein Set ohne Parameter
 
-        public void AddToEndTime(int endTime) => 
+        public void AddToEndTime(int endTime) =>
             EndTimeInUse += endTime;
 
-        public virtual double GetInfluenceOnQuality() => 
+        public virtual double GetInfluenceOnQuality() =>
             0;
 
         public bool HasErrorOccured() //PossibleError()
@@ -51,7 +47,7 @@ namespace TUFactory.Lib
             return new Random().Next(1, 100) <= errorProbability || wear >= .75;
         }
 
-        public void Repair() => 
+        public void Repair() =>
             wear = 0;
 
         public void SetTimesAndCalcWear(double currentTime, double endTime) //Zeit int & double gemischt

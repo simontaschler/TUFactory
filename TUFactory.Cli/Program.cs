@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using TUFactory.Lib;
 
 namespace TUFactory.Cli
@@ -22,7 +17,7 @@ namespace TUFactory.Cli
 
             management.ReadOrders(orderLines);
 
-            for (var timeStep = 0; timeStep <= 30; timeStep++) 
+            for (var timeStep = 0; timeStep <= 30; timeStep++)
             {
                 Console.WriteLine($"--------------------------------TIME {timeStep}--------------------------------");
                 management.Produce(timeStep);

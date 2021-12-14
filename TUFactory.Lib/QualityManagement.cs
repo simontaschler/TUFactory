@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace TUFactory.Lib
 {
@@ -23,9 +19,9 @@ namespace TUFactory.Lib
             badParts = new List<Part>();
         }
 
-        public void CheckQuality(Part part) 
+        public void CheckQuality(Part part)
         {
-            if (part.Quality <= allowedQuality) 
+            if (part.Quality <= allowedQuality)
             {
                 badParts.Add(part);
                 part.State = State.QualityNotOk;

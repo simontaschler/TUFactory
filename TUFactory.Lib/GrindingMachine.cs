@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
@@ -25,7 +21,7 @@ namespace TUFactory.Lib
             metalRemovalRate = infeed * grindingWidth * cuttingSpeed / speedRelation;
         }
 
-        public override double CalcMachineTime() 
+        public override double CalcMachineTime()
         {
             grindingVolume = CurrentPart.GetNextMachiningVolume();
             return Math.Ceiling(grindingVolume / metalRemovalRate);

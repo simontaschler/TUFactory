@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
-    public enum State : int 
-    { 
+    public enum State : int
+    {
         WorkPiece = 1,
         WorkInProgress = 2,
         Concluded = 3,
         QualityOk = 4,
         QualityNotOk = 5
     }
-    
+
     //Methode ExecuteNextWorkStep hinzufügen um Fehleranfälligkeit zu senken
     public class Part
     {
@@ -30,7 +27,7 @@ namespace TUFactory.Lib
         public State State { get; set; } //get nur für Unit-Test
         public int ID { get; }
 
-        public Part(List<WorkingStep> workInstructions, int priority) 
+        public Part(List<WorkingStep> workInstructions, int priority)
         {
             this.priority = priority;
             this.workInstructions = workInstructions;
@@ -40,7 +37,7 @@ namespace TUFactory.Lib
         }
 
         //Bündeln der Aufrufe um Fehlerpotenzial zu minimieren
-        public void ExecuteNextWorkstep(int currentTime, Machine nextMachine) 
+        public void ExecuteNextWorkstep(int currentTime, Machine nextMachine)
         {
             nextMachine.InUse = true;
             nextMachine.CurrentPart = this;
@@ -50,22 +47,22 @@ namespace TUFactory.Lib
             Quality -= Quality * nextMachine.GetInfluenceOnQuality();
         }
 
-        public void DeleteMachiningStep() 
+        public void DeleteMachiningStep()
         {
             if (workInstructions.Count > 0)
                 workInstructions.RemoveAt(0);
         }
 
-        public string GetNextMachineType() => 
-            workInstructions.First().MachineType;
+        public string GetNextMachineType() =>
+            workInstructions.FirstOrDefault()?.MachineType;
 
-        public double GetNextMachiningVolume() => 
-            workInstructions.First().Volume;
+        public double GetNextMachiningVolume() =>
+            workInstructions.FirstOrDefault()?.Volume ?? 0;
 
-        public int GetNumberOfOpenOperations() => 
+        public int GetNumberOfOpenOperations() =>
             workInstructions.Count();
 
-        public void SetPartFree() => 
+        public void SetPartFree() =>
             CurrentMachine = null;
 
         public override string ToString() =>
