@@ -28,12 +28,12 @@ namespace TUFactory.Lib
             if (part.GetQuality() <= allowedQuality) 
             {
                 badParts.Add(part);
-                part.SetState(5);
+                part.SetState(State.QualityNotOk);
             }
             else
             {
                 goodParts.Add(part);
-                part.SetState(4);
+                part.SetState(State.QualityOk);
             }
         }
     }

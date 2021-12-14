@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace TUFactory.Lib
 {
+    public enum State : int 
+    { 
+        WorkPiece = 1,
+        WorkInProgress = 2,
+        Concluded = 3,
+        QualityOk = 4,
+        QualityNotOk = 5
+    }
+    
     //Methode ExecuteNextWorkStep hinzufügen um Fehleranfälligkeit zu senken
     public class Part
     {
@@ -15,7 +24,7 @@ namespace TUFactory.Lib
         private readonly int id;
         private readonly int priority;
         private double quality;
-        private int state;      //1, 2, 3, 4, 5 => mit enum zu ersetzen
+        private State state;      //1, 2, 3, 4, 5 => mit enum zu ersetzen
         private readonly List<WorkingStep> workInstructions;
 
         private static int nextID = 1;
@@ -25,7 +34,7 @@ namespace TUFactory.Lib
             this.priority = priority;
             this.workInstructions = workInstructions;
             id = nextID++;
-            state = 1;
+            state = State.WorkPiece;
             quality = 1;
         }
 
@@ -56,18 +65,18 @@ namespace TUFactory.Lib
         public void SetQuality(double value) => //durch Property zu ersetzen
             quality = value;
 
-        public void SetState(int value) => //durch Property zu ersetzen
+        public void SetState(State value) => //durch Property zu ersetzen
             state = value;
 
         public override string ToString() =>
-            $"Part {id} state: {state}";
+            $"Part {id} state: {(int)state}";
 
         //nur für UnitTest
         public int GetId() =>
             id;
 
         //nur für UnitTest
-        public int GetState() =>
+        public State GetState() =>
             state;
     }
 }

@@ -54,7 +54,7 @@ namespace TUFactory.Lib
                 //Teil fertig mit allen Bearbeitungsschritten
                 if (openPart.GetNumberOfOpenOperations() == 0)
                 {
-                    openPart.SetState(3);
+                    openPart.SetState(State.Concluded);
                     newlyFinishedparts.Add(openPart);
                 }
                 //Teil wird in freier Maschine bearbeitet
@@ -64,7 +64,7 @@ namespace TUFactory.Lib
                     workingMachine.SetCurrentPart(openPart);
                     workingMachine.SetMachinedVolume();
                     workingMachine.SetTimesAndCalcWear(currentTime, currentTime + workingMachine.GetCalcMachineTime());
-                    openPart.SetState(2);
+                    openPart.SetState(State.WorkInProgress);
                     openPart.SetCurrentMachine(workingMachine);
                     openPart.SetQuality(openPart.GetQuality() - openPart.GetQuality() * workingMachine.GetInfluenceOnQuality());
 

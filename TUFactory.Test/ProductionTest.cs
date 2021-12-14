@@ -45,7 +45,7 @@ namespace TUFactory.Test
 
             for (var i = 0; i < compStates.Count; i++) 
             {
-                Assert.AreEqual(compStates[i], allParts[i].GetState());
+                Assert.AreEqual(compStates[i], (int)allParts[i].GetState());
                 Assert.AreEqual(compQualities[i], allParts[i].GetQuality(), 1E-15);
             }
         }
